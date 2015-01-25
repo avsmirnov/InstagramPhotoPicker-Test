@@ -1,10 +1,10 @@
 package ru.smirnov.test.instagram.photocollage.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -32,9 +32,11 @@ import ru.smirnov.test.instagram.photocollage.model.Data;
 import ru.smirnov.test.instagram.photocollage.model.Photo;
 import ru.smirnov.test.instagram.photocollage.model.User;
 import ru.smirnov.test.instagram.photocollage.utility.Api;
+import ru.smirnov.test.instagram.photocollage.utility.CONST;
 
 /**
  * Created by Alexander on 25.01.2015.
+ * Load user, load photo, photo picker
  */
 public class MainActivity extends ActionBarActivity implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
@@ -45,9 +47,11 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     private User mUser;
     private AQuery mAq;
     private String mMaxId;
-    private List<Photo> mPhotoList = new ArrayList<>();
-    private SwipeRefreshLayout mSwipeRefresh;
     private GridView mGridView;
+    private ImagesAdapter mImagesAdapter;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private List<Photo> mPhotoList = new ArrayList<>();
+    private List<Photo> mPhotoSelectedList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,23 +88,33 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             case R.id.activity_main_give_collage:
                 mUser = null;
                 mSwipeRefresh.setRefreshing(true);
+                clearPhotoList();
 
                 String name = String.valueOf(mAq.id(R.id.activity_main_user_name).getText());
                 Api.findUser(mAq, name, new AjaxCallbackUserSearch());
-                // setUser(); // temp
-                //loadPhoto();
                 break;
             case R.id.activity_main_cancel_select:
-                Log.e("TEST", "cancel choice");
+                mPhotoSelectedList.clear();
+                mImagesAdapter.notifyDataSetChanged();
                 break;
             case R.id.activity_main_create_collage:
-                Log.e("TEST", "create_collage");
+                final int count = CONST.IMAGES_FOR_COLLAGE;
+                if (mPhotoSelectedList.size() != count) {
+                    showToast(String.format(getString(R.string.select_images_need_count), count));
+                } else if (mPhotoSelectedList.size() == count) {
+                    Intent intent = new Intent(this, CollageActivity.class);
+                    intent.putParcelableArrayListExtra(CONST.TAG_SELECTED_PHOTO,
+                            (ArrayList<? extends android.os.Parcelable>) mPhotoSelectedList);
+                    startActivity(intent);
+                }
+                break;
         }
     }
 
-
     private void clearPhotoList() {
+        mPhotoSelectedList.clear();
         mPhotoList.clear();
+        mImagesAdapter.notifyDataSetChanged();
         mMaxId = "";
     }
 
@@ -119,8 +133,8 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
             }
         });
 
-        Log.e("TEST"0, "-| size " + mPhotoList.size());
-        mGridView.setAdapter(new ImagesAdapter(mPhotoList));
+        mImagesAdapter = new ImagesAdapter(mPhotoList, mPhotoSelectedList);
+        mGridView.setAdapter(mImagesAdapter);
         mSwipeRefresh.setRefreshing(false);
     }
 
@@ -145,10 +159,20 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Photo item = mPhotoList.get(position);
 
+        if (!mPhotoSelectedList.contains(item)) {
+            final int count = CONST.IMAGES_FOR_COLLAGE;
+            if (mPhotoSelectedList.size() < count) mPhotoSelectedList.add(item);
+            else showToast(String.format(getString(R.string.select_images_need_count), count));
+        } else {
+            mPhotoSelectedList.remove(item);
+        }
+
+        mImagesAdapter.notifyDataSetChanged();
     }
 
-    public class AjaxCallbackLoadPhotos extends  AjaxCallback<JSONObject> {
+    public class AjaxCallbackLoadPhotos extends AjaxCallback<JSONObject> {
 
         @Override
         public void callback(String pUrl, JSONObject pObject, AjaxStatus pStatus) {
@@ -182,7 +206,7 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         }
     }
 
-    public class AjaxCallbackUserSearch extends  AjaxCallback<JSONObject> {
+    public class AjaxCallbackUserSearch extends AjaxCallback<JSONObject> {
 
         @Override
         public void callback(String pUrl, JSONObject pObject, AjaxStatus pStatus) {
@@ -199,12 +223,14 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
 
                 if (mUser == null) {
                     showToast(getString(R.string.user_not_found));
+                    mSwipeRefresh.setRefreshing(false);
                 } else {
                     showToast(getString(R.string.user_founded_name) + mUser.getUsername());
                     loadPhoto();
                 }
             } else {
                 showToast(getString(R.string.user_not_found));
+                mSwipeRefresh.setRefreshing(false);
             }
         }
     }

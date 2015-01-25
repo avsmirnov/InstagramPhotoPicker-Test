@@ -23,9 +23,11 @@ import ru.smirnov.test.instagram.photocollage.model.Photo;
 public class ImagesAdapter extends BaseAdapter {
 
     private List<Photo> mPhotoList;
+    private List<Photo> mSelectedPhotoList;
 
-    public ImagesAdapter(List<Photo> photoList) {
+    public ImagesAdapter(List<Photo> photoList, List<Photo> selectedPhotoList) {
         mPhotoList = photoList != null ? photoList : new ArrayList<Photo>();
+        mSelectedPhotoList = selectedPhotoList != null ? selectedPhotoList : new ArrayList<Photo>();
     }
 
     @Override
@@ -63,8 +65,10 @@ public class ImagesAdapter extends BaseAdapter {
 
         Photo item = getItem(position);
         holder.photoItem = item;
-        holder.aq.id(holder.imageView).image(item.getLowResolution(), false, true, 0,
-                R.drawable.ic_launcher);
+        holder.aq.id(holder.imageView).background(mSelectedPhotoList.contains(item)
+                    ? R.color.yellow_transparent
+                    : android.R.color.transparent)
+                .image(item.getLowResolution(), false, true, 0,R.drawable.ic_launcher);
 
         return convertView;
     }

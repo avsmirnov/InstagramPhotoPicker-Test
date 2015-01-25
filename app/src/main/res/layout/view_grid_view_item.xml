@@ -8,13 +8,14 @@
         android:id="@+id/view_grid_view_item_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:indeterminate="true" />
 
-    <ru.smirnov.test.instagram.photocollage.view.SquareImageView
+    <ImageView
         android:id="@+id/view_grid_view_item_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="1dp"
         android:contentDescription="@string/default_content_description"
         tools:src="@android:drawable/screen_background_dark_transparent" />
 

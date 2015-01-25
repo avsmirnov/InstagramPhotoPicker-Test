@@ -6,6 +6,9 @@ package ru.smirnov.test.instagram.photocollage.utility;
  */
 public class CONST {
     public static final String IMAGE = "image";
+    public static final int IMAGES_FOR_COLLAGE = 4;
+    public static final String TAG_SELECTED_PHOTO = "tag_selected_photo";
+
     private static final String API_URL = "https://api.instagram.com/v1/";
     public static final String CLIENT_ID = "f304767b178248599b2645d61d0b5722";
 

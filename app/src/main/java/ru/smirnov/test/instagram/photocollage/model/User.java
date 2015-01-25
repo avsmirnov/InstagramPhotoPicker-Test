@@ -12,17 +12,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class User implements Parcelable {
     @JsonProperty("username")
-    String username;
+    private String username;
     @JsonProperty("website")
-    String website;
+    private String website;
     @JsonProperty("profile_picture")
-    String profilePicture;
+    private String profilePicture;
     @JsonProperty("full_name")
-    String fullName;
+    private String fullName;
     @JsonProperty("bio")
-    String bio;
+    private String bio;
     @JsonProperty("id")
-    String id;
+    private String id;
 
     public User() {
     }
