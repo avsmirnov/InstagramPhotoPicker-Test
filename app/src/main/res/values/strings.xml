@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">IntagramPhotoCollage-Test</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">Intagram collage</string>
+    <string name="hint_user_nickname">Введите ник пользователя</string>
+    <string name="give_collage">Давай коллаж</string>
+    <string name="user_not_found">Пользователь не найден</string>
+    <string name="user_founded_name">"Загрузка изображений для пользователя: "</string>
 
 </resources>
