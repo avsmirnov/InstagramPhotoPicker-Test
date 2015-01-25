@@ -22,7 +22,7 @@
             android:hint="@string/hint_user_nickname"
             android:imeOptions="actionDone"
             android:singleLine="true"
-            android:text="" />
+            android:text="test" />
 
         <Button
             android:id="@+id/activity_main_give_collage"

@@ -13,5 +13,6 @@
     <string name="select_images_need_count">Необходимо %s выбранных изображений</string>
     <string name="send_message">Отправить сообщение</string>
     <string name="input_email">Введите email</string>
+    <string name="error">Ошибка</string>
 
 </resources>

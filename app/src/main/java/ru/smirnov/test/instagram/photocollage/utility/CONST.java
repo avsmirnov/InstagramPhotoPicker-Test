@@ -6,6 +6,8 @@ package ru.smirnov.test.instagram.photocollage.utility;
  */
 public class CONST {
     public static final String IMAGE = "image";
+    public static final int PHOTO_SIZE = 612;
+    public static final int COLLAGE_SIZE = 1224;
     public static final int IMAGES_FOR_COLLAGE = 4;
     public static final String TAG_SELECTED_PHOTO = "tag_selected_photo";
 

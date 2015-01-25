@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
@@ -26,9 +24,9 @@ import java.util.List;
 
 import ru.smirnov.test.instagram.photocollage.R;
 import ru.smirnov.test.instagram.photocollage.adapter.ImagesAdapter;
+import ru.smirnov.test.instagram.photocollage.model.Data;
 import ru.smirnov.test.instagram.photocollage.model.ModelRequest;
 import ru.smirnov.test.instagram.photocollage.model.ModelWorker;
-import ru.smirnov.test.instagram.photocollage.model.Data;
 import ru.smirnov.test.instagram.photocollage.model.Photo;
 import ru.smirnov.test.instagram.photocollage.model.User;
 import ru.smirnov.test.instagram.photocollage.utility.Api;
@@ -38,14 +36,14 @@ import ru.smirnov.test.instagram.photocollage.utility.CONST;
  * Created by Alexander on 25.01.2015.
  * Load user, load photo, photo picker
  */
-public class MainActivity extends ActionBarActivity implements View.OnClickListener,
+public class MainActivity extends BaseActivity implements View.OnClickListener,
         SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
 
     private final static String TAG_USER_DATA = "TAG_USER_DATA";
     private final static String TAG_PHOTO_LIST = "TAG_PHOTO_LIST";
 
     private User mUser;
-    private AQuery mAq;
+
     private String mMaxId;
     private GridView mGridView;
     private ImagesAdapter mImagesAdapter;
@@ -136,10 +134,6 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
         mImagesAdapter = new ImagesAdapter(mPhotoList, mPhotoSelectedList);
         mGridView.setAdapter(mImagesAdapter);
         mSwipeRefresh.setRefreshing(false);
-    }
-
-    protected void showToast(String pMessage) {
-        Toast.makeText(this, pMessage, Toast.LENGTH_SHORT).show();
     }
 
     @Override
