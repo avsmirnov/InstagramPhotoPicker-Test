@@ -4,22 +4,73 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:layout_marginTop="8dp"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/activity_main_user_name"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:hint="@string/hint_user_nickname"
-        android:imeOptions="actionDone"
-        android:singleLine="true"
-        android:text="" />
-
-    <Button
-        android:id="@+id/activity_main_make_collage"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/give_collage" />
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/activity_main_user_name"
+            android:layout_width="0px"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:hint="@string/hint_user_nickname"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+            android:text="" />
+
+        <Button
+            android:id="@+id/activity_main_give_collage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/give_collage" />
+
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/activity_main_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1">
+
+        <GridView
+            android:id="@+id/activity_main_grid_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:horizontalSpacing="1dp"
+            android:numColumns="@integer/column_number"
+            android:verticalSpacing="1dp" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/activity_main_cancel_select"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/cancel_choice" />
+
+        <Button
+            android:id="@+id/activity_main_create_collage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/make_collage" />
+
+    </RelativeLayout>
 
 </LinearLayout>

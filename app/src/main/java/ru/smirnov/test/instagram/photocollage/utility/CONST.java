@@ -1,10 +1,11 @@
-package ru.smirnov.test.instagram.photocollage;
+package ru.smirnov.test.instagram.photocollage.utility;
 
 /**
  * Created by Alexander on 25.01.2015.
  * Container for project constance
  */
 public class CONST {
+    public static final String IMAGE = "image";
     private static final String API_URL = "https://api.instagram.com/v1/";
     public static final String CLIENT_ID = "f304767b178248599b2645d61d0b5722";
 
@@ -19,8 +20,6 @@ public class CONST {
      * May return a mix of both image and video types.
      */
     public static final String API_URL_RECENT_PATTERN =
-            API_URL + "users/%d/media/recent/?client_id=" + CLIENT_ID;
-
-
+            API_URL + "users/%s/media/recent/?client_id=" + CLIENT_ID;
 
 }
