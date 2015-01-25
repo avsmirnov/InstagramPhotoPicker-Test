@@ -40,7 +40,7 @@ public class CollageActivity extends BaseActivity implements View.OnClickListene
             mPhotoSelected = getIntent().getParcelableArrayListExtra(CONST.TAG_SELECTED_PHOTO);
         }
 
-        if (mPhotoSelected == null || mPhotoSelected.size() != 4) {
+        if (mPhotoSelected == null || mPhotoSelected.size() != CONST.IMAGES_FOR_COLLAGE) {
             showToast(getString(R.string.error));
             finish();
         } else {
