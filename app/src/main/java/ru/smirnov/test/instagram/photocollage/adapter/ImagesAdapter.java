@@ -66,7 +66,7 @@ public class ImagesAdapter extends BaseAdapter {
         Photo item = getItem(position);
         holder.photoItem = item;
         holder.aq.id(holder.imageView).background(mSelectedPhotoList.contains(item)
-                    ? R.color.yellow_transparent
+                    ? R.color.material_deep_teal_500
                     : android.R.color.transparent)
                 .image(item.getLowResolution(), false, true, 0,R.drawable.ic_launcher);
 

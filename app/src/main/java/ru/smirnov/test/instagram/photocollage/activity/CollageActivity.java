@@ -3,14 +3,12 @@ package ru.smirnov.test.instagram.photocollage.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
-import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 
@@ -19,6 +17,7 @@ import java.util.List;
 import ru.smirnov.test.instagram.photocollage.R;
 import ru.smirnov.test.instagram.photocollage.model.Photo;
 import ru.smirnov.test.instagram.photocollage.utility.CONST;
+
 
 /**
  * Created by Alexander on 25.01.2015.
@@ -36,7 +35,6 @@ public class CollageActivity extends BaseActivity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collage);
 
         if (getIntent() != null) {
             mPhotoSelected = getIntent().getParcelableArrayListExtra(CONST.TAG_SELECTED_PHOTO);
@@ -46,8 +44,7 @@ public class CollageActivity extends BaseActivity implements View.OnClickListene
             showToast(getString(R.string.error));
             finish();
         } else {
-            mAq = new AQuery(this);
-            mAq.id(R.id.activity_collage_send_email).clicked(this);
+            aq.id(R.id.activity_collage_send_email).clicked(this);
 
             int size = mPhotoSelected.size();
             for (int i = 0; i < size; i++) {
@@ -56,8 +53,23 @@ public class CollageActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_collage;
+    }
+
     private void loadBitmap(String url, int position) {
-        mAq.ajax(url, Bitmap.class, getCallback(position));
+        aq.ajax(url, Bitmap.class, getCallback(position));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void compositeBitmap(Bitmap object, int part) {
@@ -88,7 +100,7 @@ public class CollageActivity extends BaseActivity implements View.OnClickListene
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mAq.id(R.id.activity_collage_image).image(mCollageBitmap);
+                    aq.id(R.id.activity_collage_image).image(mCollageBitmap);
                 }
             });
         }
@@ -102,7 +114,6 @@ public class CollageActivity extends BaseActivity implements View.OnClickListene
         Uri collageUri = Uri.parse(path);
         final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
         emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, "sandrsmirnov@gmail.com");
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Элементарный коллаж - получите Ваш коллаж!");
         emailIntent.putExtra(Intent.EXTRA_STREAM, collageUri);
         emailIntent.setType("image/png");
@@ -132,7 +143,10 @@ public class CollageActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_collage_send_email:
-                sendBitmapToEmail();
+                if (!freezeUI) {
+                    freezeUI = true;
+                    sendBitmapToEmail();
+                }
                 break;
         }
     }

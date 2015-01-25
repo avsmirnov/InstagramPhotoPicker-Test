@@ -2,16 +2,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginTop="8dp"
     android:orientation="vertical"
     tools:context=".MainActivity">
+
+    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        tools:layout_height="56dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
         <EditText
@@ -21,8 +31,7 @@
             android:layout_weight="1"
             android:hint="@string/hint_user_nickname"
             android:imeOptions="actionDone"
-            android:singleLine="true"
-            android:text="test" />
+            android:singleLine="true" />
 
         <Button
             android:id="@+id/activity_main_give_collage"
@@ -44,6 +53,8 @@
             android:id="@+id/activity_main_grid_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:horizontalSpacing="1dp"
             android:numColumns="@integer/column_number"
             android:verticalSpacing="1dp" />
@@ -53,6 +64,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:orientation="horizontal">
 

@@ -11,7 +11,7 @@
     <string name="cancel_choice">Отменить выбор</string>
     <string name="make_collage">Создать коллаж</string>
     <string name="select_images_need_count">Необходимо %s выбранных изображений</string>
-    <string name="send_message">Отправить сообщение</string>
+    <string name="send_message">Отправить</string>
     <string name="input_email">Введите email</string>
     <string name="error">Ошибка</string>
 

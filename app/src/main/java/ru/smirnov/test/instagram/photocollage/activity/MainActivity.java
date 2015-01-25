@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 
-import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxCallback;
 import com.androidquery.callback.AjaxStatus;
 
@@ -32,6 +34,7 @@ import ru.smirnov.test.instagram.photocollage.model.User;
 import ru.smirnov.test.instagram.photocollage.utility.Api;
 import ru.smirnov.test.instagram.photocollage.utility.CONST;
 
+
 /**
  * Created by Alexander on 25.01.2015.
  * Load user, load photo, photo picker
@@ -54,18 +57,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        mAq = new AQuery(this);
-        mAq.id(R.id.activity_main_give_collage).clicked(this);
-        mAq.id(R.id.activity_main_cancel_select).clicked(this);
-        mAq.id(R.id.activity_main_create_collage).clicked(this);
+        if (toolbar != null) toolbar.setNavigationIcon(R.drawable.ic_launcher);
 
-        mSwipeRefresh = (SwipeRefreshLayout) mAq.id(R.id.activity_main_swipe).getView();
+        aq.id(R.id.activity_main_give_collage).clicked(this);
+        aq.id(R.id.activity_main_cancel_select).clicked(this);
+        aq.id(R.id.activity_main_create_collage).clicked(this);
+
+        aq.id(R.id.activity_main_user_name).getEditText()
+                .setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_DONE) {
+                            aq.id(R.id.activity_main_give_collage).click();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+        mSwipeRefresh = (SwipeRefreshLayout) aq.id(R.id.activity_main_swipe).getView();
         mSwipeRefresh.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE);
         mSwipeRefresh.setOnRefreshListener(this);
 
-        mGridView = mAq.id(R.id.activity_main_grid_view).getGridView();
+        mGridView = aq.id(R.id.activity_main_grid_view).getGridView();
         mGridView.setOnItemClickListener(this);
 
         if (savedInstanceState != null) {
@@ -81,29 +96,44 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
+    protected int getLayout() {
+        return R.layout.activity_main;
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_main_give_collage:
-                mUser = null;
-                mSwipeRefresh.setRefreshing(true);
-                clearPhotoList();
+                if (!freezeUI) {
+                    closeKeyboard(aq.id(R.id.activity_main_user_name).getView());
+                    freezeUI = true;
+                    mUser = null;
+                    mSwipeRefresh.setRefreshing(true);
+                    clearPhotoList();
 
-                String name = String.valueOf(mAq.id(R.id.activity_main_user_name).getText());
-                Api.findUser(mAq, name, new AjaxCallbackUserSearch());
+                    String name = String.valueOf(aq.id(R.id.activity_main_user_name).getText());
+                    Api.findUser(aq, name, new AjaxCallbackUserSearch());
+                }
                 break;
             case R.id.activity_main_cancel_select:
-                mPhotoSelectedList.clear();
-                mImagesAdapter.notifyDataSetChanged();
+                if (!freezeUI) {
+                    mPhotoSelectedList.clear();
+                    mImagesAdapter.notifyDataSetChanged();
+                }
                 break;
             case R.id.activity_main_create_collage:
-                final int count = CONST.IMAGES_FOR_COLLAGE;
-                if (mPhotoSelectedList.size() != count) {
-                    showToast(String.format(getString(R.string.select_images_need_count), count));
-                } else if (mPhotoSelectedList.size() == count) {
-                    Intent intent = new Intent(this, CollageActivity.class);
-                    intent.putParcelableArrayListExtra(CONST.TAG_SELECTED_PHOTO,
-                            (ArrayList<? extends android.os.Parcelable>) mPhotoSelectedList);
-                    startActivity(intent);
+                if (!freezeUI) {
+                    final int count = CONST.IMAGES_FOR_COLLAGE;
+                    if (mPhotoSelectedList.size() != count) {
+                        showToast(String.format(getString(R.string.select_images_need_count), count));
+                    } else if (mPhotoSelectedList.size() == count) {
+                        freezeUI = true;
+
+                        Intent intent = new Intent(this, CollageActivity.class);
+                        intent.putParcelableArrayListExtra(CONST.TAG_SELECTED_PHOTO,
+                                (ArrayList<? extends android.os.Parcelable>) mPhotoSelectedList);
+                        startActivity(intent);
+                    }
                 }
                 break;
         }
@@ -118,7 +148,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
 
     private void loadPhoto() {
         if (mUser != null) {
-            Api.loadPhotos(mAq, mUser.getId(), mMaxId, new AjaxCallbackLoadPhotos());
+            Api.loadPhotos(aq, mUser.getId(), mMaxId, new AjaxCallbackLoadPhotos());
         }
     }
 
@@ -193,10 +223,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                     }
                 } else {
                     showToast(getString(R.string.photo_not_found));
+                    mSwipeRefresh.setRefreshing(false);
                 }
             } else {
                 showToast(getString(R.string.photo_not_found));
+                mSwipeRefresh.setRefreshing(false);
             }
+
+            freezeUI = false;
         }
     }
 
@@ -226,6 +260,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,
                 showToast(getString(R.string.user_not_found));
                 mSwipeRefresh.setRefreshing(false);
             }
+
+            freezeUI = false;
         }
     }
 
